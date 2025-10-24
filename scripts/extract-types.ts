@@ -38,9 +38,6 @@ for (const line of lines) {
         pairs.set(thisType, eventMap);
       }
     }
-    // Reset exec for next line
-    thisTypeRegex.lastIndex = 0;
-    eventMapRegex.lastIndex = 0;
   }
 }
 
