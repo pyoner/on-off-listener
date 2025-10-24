@@ -18,13 +18,3 @@ export function on<T extends EventTarget>(
   target.addEventListener(type, listener, options);
   return () => target.removeEventListener(type, listener, options);
 }
-on(document, "DOMContentLoaded", (e) => {
-  e;
-});
-on(new Worker(""), "error", (e) => {
-  e;
-});
-
-on(new AbortSignal(), "abort", (e) => {
-  e;
-});
