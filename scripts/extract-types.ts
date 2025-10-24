@@ -46,10 +46,8 @@ for (const line of lines) {
 
 console.log("// WARNING: This file is auto-generated. Do not edit manually.");
 console.log("// Any changes will be overwritten when the script is run again.");
-console.log(
-  '/// <reference path="../../node_modules/typescript/lib/lib.dom.d.ts" />',
-);
-console.log("import { eventMap } from './property-key';");
+console.log('/// <reference lib="dom" />');
+console.log("import { eventMap } from '../../property-key';");
 console.log("declare global {");
 console.log(`interface EventTarget {[eventMap]: object}`);
 for (const [type, map] of pairs.entries()) {

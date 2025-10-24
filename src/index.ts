@@ -1,4 +1,4 @@
-import { eventMap } from "./event-maps/property-key";
+import { eventMap } from "./property-key";
 
 export function on<
   T extends EventTarget,

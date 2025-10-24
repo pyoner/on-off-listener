@@ -3,7 +3,13 @@
   "module": "src/index.ts",
   "type": "module",
   "scripts": {
-    "gen:dom-event-map": "bun run ./scripts/extract-types.ts node_modules/typescript/lib/lib.dom.d.ts > ./src/event-maps/dom.ts"
+    "gen-types:browser": "bun run ./scripts/extract-types.ts node_modules/typescript/lib/lib.dom.d.ts > ./src/types/generated/lib.dom.ts"
+  },
+  "exports": {
+    "import": "./src/index.ts",
+    "types": {
+      "browser": "./src/types/browser.ts"
+    }
   },
   "devDependencies": {
     "@types/bun": "^1.3.0"

@@ -1,7 +1,7 @@
 // WARNING: This file is auto-generated. Do not edit manually.
 // Any changes will be overwritten when the script is run again.
-/// <reference path="../../node_modules/typescript/lib/lib.dom.d.ts" />
-import { eventMap } from './property-key';
+/// <reference lib="dom" />
+import { eventMap } from '../../property-key';
 declare global {
 interface EventTarget {[eventMap]: object}
 interface AbortSignal {[eventMap]: AbortSignalEventMap}
