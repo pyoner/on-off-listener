@@ -1,0 +1,15 @@
+{
+  "name": "on-off-listener",
+  "module": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "gen:dom-event-map": "bun run ./scripts/extract-types.ts node_modules/typescript/lib/lib.dom.d.ts > ./src/event-maps/dom.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.0"
+  },
+  "peerDependencies": {
+    "typescript": "5.9.3"
+  },
+  "dependencies": {}
+}
