@@ -6,9 +6,8 @@
     "gen-types:browser": "bun run ./scripts/extract-types.ts node_modules/typescript/lib/lib.dom.d.ts > ./src/types/generated/lib.dom.ts"
   },
   "exports": {
-    "import": "./src/index.ts",
-    "types": {
-      "browser": "./src/types/browser.ts"
+    "browser": {
+      "import": "./src/browser.ts"
     }
   },
   "devDependencies": {
