@@ -14,7 +14,13 @@ export function on<T extends EventTarget>(
   type: string,
   listener: EventListenerOrEventListenerObject,
   options?: boolean | AddEventListenerOptions,
-): () => void {
+): () => void;
+export function on<T extends EventTarget>(
+  target: T,
+  type: string,
+  listener: EventListenerOrEventListenerObject,
+  options?: boolean | AddEventListenerOptions,
+) {
   target.addEventListener(type, listener, options);
   return () => target.removeEventListener(type, listener, options);
 }
