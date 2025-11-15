@@ -4,6 +4,8 @@ export type TypeOptions<T extends string> = AddEventListenerOptions & {
   type: T;
 };
 
+export type Off = () => void;
+
 export function on<
   T extends EventTarget,
   K extends Extract<keyof T[typeof eventMap], string>,
@@ -11,17 +13,17 @@ export function on<
   target: T,
   typeOptions: K | TypeOptions<K>,
   listener: (this: T, ev: T[typeof eventMap][K]) => void,
-): () => void;
+): Off;
 export function on<T extends EventTarget>(
   target: T,
   typeOptions: string | TypeOptions<string>,
   listener: EventListenerOrEventListenerObject,
-): () => void;
+): Off;
 export function on<T extends EventTarget>(
   target: T,
   typeOptions: string | TypeOptions<string>,
   listener: EventListenerOrEventListenerObject,
-) {
+): Off {
   const { type, ...options } =
     typeof typeOptions === "string" ? { type: typeOptions } : typeOptions;
   target.addEventListener(type, listener, options);
