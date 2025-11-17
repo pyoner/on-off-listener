@@ -18,6 +18,13 @@
       "import": "./src/browser.ts"
     }
   },
+  "author": {
+    "name": "Askar Yusupov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pyoner/on-off-listener"
+  },
   "devDependencies": {
     "@types/bun": "^1.3.0"
   },
