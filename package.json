@@ -1,6 +1,14 @@
 {
   "name": "on-off-listener",
   "version": "0.3.0",
+  "description": "Tiny type-safe helper for addEventListener with built-in cleanup.",
+  "keywords": [
+    "event-listener",
+    "typescript",
+    "dom",
+    "cleanup",
+    "delegate"
+  ],
   "type": "module",
   "scripts": {
     "gen-types:browser": "bun run ./scripts/extract-types.ts node_modules/typescript/lib/lib.dom.d.ts > ./src/types/generated/lib.dom.ts"

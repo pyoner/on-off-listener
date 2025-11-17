@@ -1,68 +1,78 @@
 # on-off-listener
 
-A lightweight TypeScript library for adding and removing event listeners on `EventTarget` objects with automatic type inference for events. Returns a cleanup function for easy management. MIT licensed.
+A tiny helper that adds event listeners with full TypeScript safety and hands you a cleanup function so you never forget to unsubscribe.
 
-## Features
+## Why people reach for it
 
-- **Type-Safe Event Handling**: Event names are constrained to valid keys for the target (with autocomplete), and event types are automatically inferred from the target and event name, preventing compile-time errors.
-- **Cleanup Function**: Returns a remover for the listener.
-- **DOM Event Support**: Built-in maps for standard DOM events from TypeScript's lib.
-- **Zero Dependencies**: No runtime deps.
+- **Intellisense everywhere** – Event names autocomplete per target, and handler arguments are strongly typed.
+- **One-line cleanup** – The function you get back removes the listener with the exact same options.
+- **No dependencies** – Ships as plain TypeScript. Works in any modern build step.
+- **DOM-friendly extras** – Includes a `delegate` helper for event delegation in the browser.
 
 ## Installation
 
 ```bash
 npm install on-off-listener
-bun add on-off-listener
 pnpm add on-off-listener
+bun add on-off-listener
 ```
 
-## Usage
+## Quick start
 
-Import `on` and attach listeners. For event targets, the event name is constrained to valid keys (with autocomplete), and the event type is inferred automatically from the target and event name.
-
-### Type-Safe
-
-```typescript
+```ts
 import { on } from "on-off-listener";
 
-const button = document.getElementById("myButton")! as HTMLButtonElement;
+const button = document.querySelector("button")!;
 const off = on(button, "click", (event) => {
-  console.log("Button clicked:", event.clientX); // `event` infers as MouseEvent
+  console.log("Button clicked at X:", event.clientX); // `event` is a MouseEvent
 });
 
-off(); // Cleanup
+off(); // Removes the listener
 ```
 
-For `Window` or custom events:
+Need to pass `AddEventListenerOptions` (like `capture` or `once`)? Provide a small object with a `type` property:
 
-```typescript
-const offResize = on(window, "resize", (event) => {
-  console.log("Window resized"); // Infers UIEvent
+```ts
+on(window, { type: "resize", passive: true }, () => {
+  console.log("Resized!");
 });
+```
 
-const offCustom = on(
+Custom events still work—just type the handler yourself and enjoy the shared cleanup story.
+
+## Browser delegation helper
+
+If you prefer event delegation, wrap your listener with `delegate` so you only attach one handler:
+
+```ts
+import { on, delegate } from "on-off-listener";
+
+const off = on(
   document.body,
-  "custom-event",
-  (event: CustomEvent<{ detail: string }>) => {
-    // Manual typing for customs
-    console.log(event.detail);
-  },
+  "click",
+  delegate("button")((event) => {
+    console.log("Clicked button text:", event.delegatedTarget.textContent);
+  }),
 );
 ```
 
-## API
+The delegated listener receives the original event plus a `delegatedTarget` that matches your selector.
 
-```typescript
-on<
-  T extends EventTarget,
-  K extends Extract<keyof T[typeof eventMap], string>,
->(target: T, type: K, listener: (this: T, ev: T[typeof eventMap][K]) => void, options?: boolean | AddEventListenerOptions): () => void
-```
+## API highlights
 
-- Attaches a typed listener to `target` for `type` (constrained to valid event names for the target), inferring `ev` from the target's event map.
-- Falls back to generic `addEventListener` for non-DOM use.
-- **Params**: `target` (EventTarget), `type` (string, constrained to target's events), `listener` (callback), `options` (optional).
-- **Returns**: Cleanup function.
+- `on(target, typeOrOptions, listener)`
+  - `target`: Any `EventTarget`
+  - `typeOrOptions`: Either the event name (`"click"`) or `{ type, ...addEventListener options }`
+  - `listener`: Function or `EventListenerObject`
+  - **Returns**: `() => void` to remove the listener
 
-For more details, see the source or TypeScript defs.
+- `delegate(selector)`  
+  Wraps a listener so it only fires when the event bubbles from an element matching the selector. Works with HTML, SVG, and MathML tags (typed out of the box).
+
+## How typing works
+
+During development you can run `bun run gen-types:browser` to regenerate the DOM event map shim. The library attaches a hidden `eventMap` symbol to each DOM interface so TypeScript can infer the right event types for every `EventTarget`.
+
+---
+
+That’s it—import `on`, attach listeners with confidence, and tear them down just as easily.
