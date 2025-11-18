@@ -38,7 +38,7 @@ export function delegate<E extends Element = Element>(
       const delegatedTarget = target.closest<E>(selector);
 
       if (delegatedTarget) {
-        fn.call(this, { ...event, delegatedTarget });
+        fn.call(this, Object.assign(event, { delegatedTarget }));
       }
     };
   };
