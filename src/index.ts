@@ -14,18 +14,19 @@ export type Listener<
 export function on<
   T extends EventTarget,
   K extends Extract<keyof T[typeof eventMap], string>,
-  L extends Listener<T, K>,
->(target: T, typeOptions: K | TypeOptions<K>, listener: L): Off;
+>(target: T, typeOptions: K | TypeOptions<K>, listener: Listener<T, K>): Off;
 export function on<
   T extends EventTarget,
   K extends string | TypeOptions<string>,
-  L extends EventListenerOrEventListenerObject,
->(target: T, typeOptions: K, listener: L): Off;
+>(target: T, typeOptions: K, listener: EventListenerOrEventListenerObject): Off;
 export function on<
   T extends EventTarget,
   K extends string | TypeOptions<string>,
-  L extends EventListenerOrEventListenerObject,
->(target: T, typeOptions: K, listener: L): Off {
+>(
+  target: T,
+  typeOptions: K,
+  listener: EventListenerOrEventListenerObject,
+): Off {
   let type: string;
   let options: AddEventListenerOptions;
 

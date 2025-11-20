@@ -1,5 +1,7 @@
 /// <reference path="types/generated/lib.dom.ts" />
 
+import { on } from "./index";
+
 export * from "./index";
 
 export type Listener<T extends EventTarget, E extends Event> = (
@@ -11,10 +13,11 @@ export type DelegatedEvent<T extends Element, E extends Event> = E & {
   readonly delegatedTarget: T;
 };
 
-export type DelegatedListener<T extends Element, E extends Event> = Listener<
-  T,
-  DelegatedEvent<T, E>
->;
+export type DelegatedListener<
+  T extends EventTarget,
+  D extends Element,
+  E extends Event,
+> = Listener<T, DelegatedEvent<D, E>>;
 
 export function delegate<
   T extends EventTarget,
@@ -22,7 +25,7 @@ export function delegate<
   K extends keyof HTMLElementTagNameMap,
 >(
   selector: K,
-  listener: DelegatedListener<HTMLElementTagNameMap[K], E>,
+  listener: DelegatedListener<T, HTMLElementTagNameMap[K], E>,
 ): Listener<T, E>;
 export function delegate<
   T extends EventTarget,
@@ -30,7 +33,7 @@ export function delegate<
   K extends keyof SVGElementTagNameMap,
 >(
   selector: K,
-  listener: DelegatedListener<SVGElementTagNameMap[K], E>,
+  listener: DelegatedListener<T, SVGElementTagNameMap[K], E>,
 ): Listener<T, E>;
 export function delegate<
   T extends EventTarget,
@@ -38,18 +41,18 @@ export function delegate<
   K extends keyof MathMLElementTagNameMap,
 >(
   selector: K,
-  listener: DelegatedListener<MathMLElementTagNameMap[K], E>,
+  listener: DelegatedListener<T, MathMLElementTagNameMap[K], E>,
 ): Listener<T, E>;
 export function delegate<
   T extends EventTarget,
   E extends Event,
   D extends Element = Element,
->(selector: string, listener: DelegatedListener<D, E>): Listener<T, E>;
+>(selector: string, listener: DelegatedListener<T, D, E>): Listener<T, E>;
 export function delegate<
   T extends EventTarget,
   E extends Event,
   D extends Element = Element,
->(selector: string, listener: DelegatedListener<D, E>): Listener<T, E> {
+>(selector: string, listener: DelegatedListener<T, D, E>): Listener<T, E> {
   return function (event) {
     const target = event.target as HTMLElement;
     const delegatedTarget = target.closest<D>(selector);
@@ -68,7 +71,8 @@ export function delegate<
   };
 }
 
-const handler = delegate<HTMLBodyElement, MouseEvent>("a", (e) => {
+const handler = delegate<HTMLBodyElement, MouseEvent>("a", function (e) {
+  this;
   e.target;
   e.currentTarget;
   e.delegatedTarget;
@@ -89,8 +93,39 @@ document.addEventListener(
 
 document.addEventListener(
   "click",
-  delegate("a", (e) => {
+  delegate("a", function (e) {
+    this;
     e.button;
+    e.target;
+    e.delegatedTarget;
+  }),
+);
+
+on(document, "click", function (e) {
+  this;
+  e.button;
+  e.target;
+  e.delegatedTarget;
+});
+
+on(
+  document,
+  "click",
+  delegate("a", function (e) {
+    this;
+    e.button;
+    e.target;
+    e.delegatedTarget;
+  }),
+);
+
+on(
+  document,
+  { type: "click" },
+  delegate("a", function (e) {
+    this;
+    e.button;
+    e.target;
     e.delegatedTarget;
   }),
 );
