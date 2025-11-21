@@ -10,8 +10,8 @@ export type Listener<T extends EventTarget, E extends Event> = (
 export type FilterListener<
   T extends EventTarget,
   E extends Event,
-  F = undefined,
-> = (this: T, event: E, value: F) => void;
+  V = undefined,
+> = (this: T, event: E, value: V) => void;
 
 export function closest<
   T extends EventTarget,
