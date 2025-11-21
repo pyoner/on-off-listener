@@ -7,7 +7,7 @@ A tiny helper that adds event listeners with full TypeScript safety and hands yo
 - **Intellisense everywhere** – Event names autocomplete per target, and handler arguments are strongly typed.
 - **One-line cleanup** – The function you get back removes the listener with the exact same options.
 - **No dependencies** – Ships as plain TypeScript. Works in any modern build step.
-- **DOM-friendly extras** – Includes a `delegate` helper for event delegation in the browser.
+- **DOM-friendly extras** – Includes a `closest` helper for event delegation in the browser.
 
 ## Installation
 
@@ -40,23 +40,23 @@ on(window, { type: "resize", passive: true }, () => {
 
 Custom events still work—just type the handler yourself and enjoy the shared cleanup story.
 
-## Browser delegation helper
+## Browser `closest` helper
 
-If you prefer event delegation, wrap your listener with `delegate` so you only attach one handler:
+If you prefer event delegation, wrap your listener with `closest` so you only attach one handler:
 
 ```ts
-import { on, delegate } from "on-off-listener";
+import { on, closest } from "on-off-listener";
 
 const off = on(
   document.body,
   "click",
-  delegate("button")((event) => {
-    console.log("Clicked button text:", event.delegatedTarget.textContent);
+  closest("button", (event, button) => {
+    console.log("Clicked button text:", button.textContent);
   }),
 );
 ```
 
-The delegated listener receives the original event plus a `delegatedTarget` that matches your selector.
+The filtered listener receives the original event plus the closest matching element, passed as the second argument.
 
 ## API highlights
 
@@ -66,8 +66,8 @@ The delegated listener receives the original event plus a `delegatedTarget` that
   - `listener`: Function or `EventListenerObject`
   - **Returns**: `() => void` to remove the listener
 
-- `delegate(selector)`  
-  Wraps a listener so it only fires when the event bubbles from an element matching the selector. Works with HTML, SVG, and MathML tags (typed out of the box).
+- `closest(selector, listener)`  
+  Filters a listener so it only fires when the event target or one of its ancestors matches the selector. Your listener receives the original event and the matched element, with HTML, SVG, and MathML tags typed out of the box.
 
 ## How typing works
 
