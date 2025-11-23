@@ -1,6 +1,6 @@
 {
   "name": "on-off-listener",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Tiny type-safe helper for addEventListener with built-in cleanup.",
   "keywords": [
     "event-listener",
